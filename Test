@@ -47,7 +47,7 @@ function CityScreen() {
 
   const pressCity = () =>
   {
-    alert("아파트");
+    alert("도시");
   }
 
   return (
