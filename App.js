@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Platform, TouchableHighlight, Button, Image } from 'react-native';
+// import React from 'react';
+import React, {useState, useRef} from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Platform, TouchableHighlight, Image, Button} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { List, DataTable, Checkbox, Dialog, Portal } from 'react-native-paper'
+import { List, DataTable, Checkbox, Dialog, Portal, Paragraph, Modal, Provider } from 'react-native-paper'
+import {PanGestureHandler} from 'react-native-gesture-handler';
 
 function HomeScreen({navigation})
 {
@@ -15,6 +17,7 @@ function HomeScreen({navigation})
 
 return(
   <View style = {styles.safeAreaContainer}>
+    
     <Button onPress = {MoveToMain} title = "TAP TO START"/>
   </View>
 );
@@ -26,19 +29,33 @@ function MainScreen()
   {
     alert("환경설정");
   }
-
+  const [sideLength, setSideLength] = useState(100);
 return(
   <View style = {styles.container}>
     <View style = {styles.setting}>
-      <Button onPress = {pressSetting} title = "환경설정"/>
+    <Button onPress = {pressSetting} title = "환경설정"/>
     </View>
+    <View style={styles.wrap}>
+      <PanGestureHandler
+        onGestureEvent={(event) => {
+          setSideLength(event.nativeEvent.translationY);
+        }}>
+        <View
+          style={{
+            ...styles.square,
+            width: sideLength,
+            height: sideLength,
+          }}></View>
+      </PanGestureHandler>
+    </View>
+
     <Tab.Navigator>
       <Tab.Screen name= "도시" component={CityScreen} />
       <Tab.Screen name= "개미" component={AntScreen} />
       <Tab.Screen name= "건물" component={BuildingScreen} />
       <Tab.Screen name= "지도" component={MapScreen} />
-    </Tab.Navigator>  
-  </View>
+    </Tab.Navigator>
+  </View> 
 );
 }
 
@@ -70,7 +87,7 @@ function CityScreen() {
 
     <DataTable.Row>
       <DataTable.Cell>보유자원</DataTable.Cell>
-      <DataTable.Cell>73502</DataTable.Cell>
+      <DataTable.Cell>73503</DataTable.Cell>
 
     </DataTable.Row>
 
@@ -91,46 +108,67 @@ function AntScreen() {
 
   const [visible, setVisible] = React.useState(false);
 
-  const showDialog = () =>
+  const pressAntSetting = () =>
   {
-    <Portal>
-        <Dialog visible={visible} onDismiss={hideDialog}>
-          <Dialog.Title>Alert</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>This is simple dialog</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={hideDialog}>Done</Button>
-          </Dialog.Actions>
-        </Dialog>
-    </Portal>
+    alert("이미지 들어갈 자리");
   }
-  const hideDialog = () => setVisible(false);
 
+  const pressAntSetting2 = () =>
+  {
+    alert("이미지 들어갈 자리2");
+  }
+
+  const pressAntSetting3 = () =>
+  {
+    alert("이미지 들어갈 자리3");
+  }
+
+  const pressAntSetting4 = () =>
+  {
+    alert("이미지 들어갈 자리4");
+  }
+
+  const hideDialog = () => setVisible(false);
   return (
     <View style = {{flex: 1, justifyContent: 'flex-end'}}>
       <List.Accordion>
         <DataTable style = {{backgroundColor: 'white'}}>
-          <DataTable.Row onPress = {showDialog}>
-          <Image source = {require('./assets/c625dcdf7f1fb4d6.png')}/>
+          <DataTable.Row>
+          <TouchableHighlight onPress={pressAntSetting}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/일꾼.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  일꾼개미</DataTable.Cell>
             <DataTable.Cell numeric>20자원</DataTable.Cell>
           </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/c625dcdf7f1fb4d6.png')} />
+          <TouchableHighlight onPress={pressAntSetting2}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/일꾼.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  감독관개미</DataTable.Cell>
             <DataTable.Cell numeric>40자원</DataTable.Cell>
           </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/c625dcdf7f1fb4d6.png')}/>
+          <TouchableHighlight onPress={pressAntSetting3}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/일꾼.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  회사원개미</DataTable.Cell>
             <DataTable.Cell numeric>80자원</DataTable.Cell>
           </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/c625dcdf7f1fb4d6.png')}/>
+          <TouchableHighlight onPress={pressAntSetting4}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/일꾼.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  회장개미</DataTable.Cell>
             <DataTable.Cell numeric>200자원</DataTable.Cell>
           </DataTable.Row>
@@ -142,65 +180,125 @@ function AntScreen() {
 }
 
 function BuildingScreen() {
+
+  const [visible1, setHouse] = React.useState(false);
+  const showHouse = () => setHouse(true);
+  const hideHouse = () => setHouse(false);
+
+  const [visible2, setApartment] = React.useState(false);
+  const showApartment = () => setApartment(true);
+  const hideApartment = () => setApartment(false);
+
+  const [visible3, setCompany] = React.useState(false);
+  const showCompany = () => setCompany(true);
+  const hideCompany = () => setCompany(false);
+
+  const [visible4, setHotel] = React.useState(false);
+  const showHotel = () => setHotel(true);
+  const hideHotel = () => setHotel(false);
+
+  const containerStyle = {backgroundColor: 'white', padding: 20, height: "70%", width: "70%", marginLeft: "15%", alignItems: 'center', justifyContent: 'center'};
+
+  const pressAntSetting = () =>
+  {
+    alert("건물 이미지 들어갈 자리");
+  }
+
+  const pressAntSetting2 = () =>
+  {
+    alert("건물 이미지 들어갈 자리2");
+  }
+
+  const pressAntSetting3 = () =>
+  {
+    alert("건물 이미지 들어갈 자리3");
+  }
+
+  const pressAntSetting4 = () =>
+  {
+    alert("건물 이미지 들어갈 자리4");
+    
+  }
   return (
+    <Provider>
     <View style = {{flex: 1, justifyContent: 'flex-end'}}>
+    <Portal>
+        <Modal visible={visible1} onDismiss={hideHouse} contentContainerStyle={containerStyle}>
+          <View style = {{alignItems: 'center', justifyContent: 'center'}}>
+          <Text>벽돌집 이미지</Text>
+          <Text>비용: 인구 50 자원 500</Text>
+          <Text>능력치 분당 인구수 +1</Text>
+          </View>
+        </Modal>
+
+        <Modal visible={visible2} onDismiss={hideApartment} contentContainerStyle={containerStyle}>
+          <View style = {{alignItems: 'center', justifyContent: 'center'}}>
+          <Text>아파트 이미지</Text>
+          <Text>비용: 인구 50 자원 500</Text>
+          <Text>능력치 분당 인구수 +1</Text>
+          </View>
+        </Modal>
+
+      </Portal>
       <List.Accordion>
         <DataTable style = {{backgroundColor: 'white'}}>
-          <DataTable.Row>
-          <Image source = {require('./assets/07be15af8c4cd374.png')}/>
+        <DataTable.Row onPress = {showHouse}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/아파트.png')}/>
             <DataTable.Cell>  벽돌집</DataTable.Cell>
             <DataTable.Cell numeric>20자원</DataTable.Cell>
-          </DataTable.Row>
+        </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/07be15af8c4cd374.png')} />
+          <TouchableHighlight onPress={showApartment}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/아파트.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  아파트</DataTable.Cell>
             <DataTable.Cell numeric>40자원</DataTable.Cell>
           </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/07be15af8c4cd374.png')} />
+          <TouchableHighlight onPress={pressAntSetting4}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/아파트.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  개미 회사</DataTable.Cell>
             <DataTable.Cell numeric>80자원</DataTable.Cell>
           </DataTable.Row>
 
           <DataTable.Row>
-          <Image source = {require('./assets/07be15af8c4cd374.png')} />
+          <TouchableHighlight onPress={pressAntSetting4}>
+          <Image
+            style={styles.logo}
+            source={require('./assets/아파트.png')}/>
+        </TouchableHighlight>
             <DataTable.Cell>  개미 호텔</DataTable.Cell>
             <DataTable.Cell numeric>200자원</DataTable.Cell>
           </DataTable.Row>
-
         </DataTable>
       </List.Accordion>
     </View>
+    </Provider>
   );
 }
 
 function MapScreen() {
   return (
-    // <View style = {{flex: 1, justifyContent: 'flex-end'}}>
-    //   <List.Accordion>
-    //     <View style = {{backgroundColor: 'green'}}>
-    //       <View style = {{width: 100}}>
-    //         <Button title = 'store' style = {{justifyContent: 'flex-start'}} />
-    //         <Button title = 'store' style = {{justifyContent: 'flex-start'}} />
-    //         <Button title = 'store' style = {{justifyContent: 'flex-start'}} />
-    //       </View>
-    //     </View>
-    //   </List.Accordion>
-    // </View>
 
     <View style = {{flex: 1, justifyContent: 'flex-end'}}>
       <List.Accordion>
       <DataTable style = {{backgroundColor: 'red'}}>
-
 
         <Button title = 'store' />
         <Button title = '업적' />
         <Button title = '수집품' />
         <Button title = '확장' />
 
- 
+
       </DataTable>
     </List.Accordion>
     </View>
@@ -256,5 +354,17 @@ const styles = StyleSheet.create({
   {
     flexDirection:'row',
     alignItems: 'flex-start'
-  }
+  },
+  logo: {
+    backgroundColor: '#056ecf',
+    height: 50,
+    width: 50,
+  },
+  
+  wrap: {flex: 1, justifyContent: 'center'},
+  
+  square: {
+    backgroundColor: 'blue',
+    alignSelf: 'center',
+  },
 });
